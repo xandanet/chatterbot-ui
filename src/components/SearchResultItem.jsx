@@ -1,8 +1,12 @@
 import _ from 'lodash';
 import {MdSentimentNeutral, MdSentimentVerySatisfied, MdSentimentVeryDissatisfied} from 'react-icons/md';
 import {IoPlayCircleOutline} from 'react-icons/io5';
+import {usePlayerContext} from '../context/usePlayerContext';
+import Button from './Button';
 
-export default function SearchResultItem(result, searchTerm) {
+export default function SearchResultItem({searchTerm, ...result}) {
+	const {playerRef, playerOptions, setPlayerOptions} = usePlayerContext();
+
 	return (
 		<div key={result.ID} className="flex items-center p-8 text-left">
 			<div className="">
@@ -29,8 +33,25 @@ export default function SearchResultItem(result, searchTerm) {
 				</div>
 
 				<div className="text-xs mt-1">
-					<p dangerouslySetInnerHTML={{__html: result.Content.replace(/carbon/, '<mark>carbon</mark>')}} />
+					<p dangerouslySetInnerHTML={{__html: result.Content.replace(searchTerm, `<mark>${searchTerm}</mark>`)}} />
 				</div>
+
+				<Button
+					onClick={() => {
+						console.log('Audio 1');
+						// setActivePodcast(podcast);
+						// setPlayerOptions((prev) => ({
+						// 	...prev,
+						// 	url: `/podcasts/${podcast.filename.replace('.wav', '.mp3')}`,
+						// 	playing: true,
+						// 	played: 0,
+						// 	loaded: 0,
+						// 	pip: false,
+						// }));
+						playerRef.current.seekTo(parseFloat(result.Start / 1000));
+					}}>
+					Listen
+				</Button>
 			</div>
 		</div>
 	);

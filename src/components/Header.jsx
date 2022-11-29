@@ -9,10 +9,10 @@ export default function Header() {
 				</Link>
 			</div>
 			<div className="ml-auto">
-				<Link to="/" className="ml-2">
+				<Link to="/" className="ml-3">
 					Home
 				</Link>
-				<Link to="/search" className="ml-2">
+				<Link to="/search" className="ml-3">
 					Search
 				</Link>
 			</div>
