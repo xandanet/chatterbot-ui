@@ -15,7 +15,7 @@ export default function Layout() {
 				<Outlet />
 			</div>
 			<Footer />
-			<PodcastPlayer />
+			{/*<PodcastPlayer />*/}
 		</div>
 	);
 }
