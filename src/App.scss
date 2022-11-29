@@ -1,0 +1,23 @@
+#root {
+  min-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  height: 5px;
+  width: 100%;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background: #3b7677;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+button {
+  &[disabled] {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+}
