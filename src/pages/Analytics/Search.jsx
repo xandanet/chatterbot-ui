@@ -68,19 +68,19 @@ export default function Search() {
   }
 
   return (
-    <div>
+    <div className="centering">
       <h1 className="my-8">Search Analytics</h1>
 
-      <Row gutter={20} justify="center">
-        <Col>
-          <h2 className="text-xl mb-4">Top Searches</h2>
-          <Table dataSource={searchData()} columns={searchColumns} />;
-        </Col>
-        <Col>
-          <h2 className="text-xl mb-4">Popular Search Locations</h2>
-          <Table dataSource={searchLocationData()} columns={searchLocationColumns} />;
-        </Col>
-      </Row>
-    </div>
+        <Row gutter={20}>
+          <Col>
+            <h2 className="text-xl mb-4">Top Searches</h2>
+            <Table dataSource={searchData()} columns={searchColumns} />;
+          </Col>
+          <Col>
+            <h2 className="text-xl mb-4">Popular Search Locations</h2>
+            <Table dataSource={searchLocationData()} columns={searchLocationColumns} />;
+          </Col>
+        </Row>
+        </div>
   );
 }

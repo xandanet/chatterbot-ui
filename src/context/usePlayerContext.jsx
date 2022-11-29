@@ -16,7 +16,7 @@ export const usePlayerContext = () => {
 function PlayerContextProvider({children}) {
 	const playerRef = useRef();
 	const [playerOptions, setPlayerOptions] = useState({
-		url: [podcasts[0].audioSrc],
+		url: null,
 		pip: false,
 		playing: true,
 		controls: true,
