@@ -13,7 +13,7 @@ export default function Layout() {
 			<div className="page-content">
 				<Outlet />
 			</div>
-			<PodcastPlayer />
+			{/*<PodcastPlayer />*/}
 		</div>
 	);
 }

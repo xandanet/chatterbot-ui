@@ -5,6 +5,7 @@ import {QueryClient, QueryClientProvider} from 'react-query';
 import Layout from './pages/Layout';
 import Home from './pages/Home';
 import Search from './pages/Search';
+import AnalyticsEpisode from './pages/Analytics/Episode'
 
 import './App.scss';
 
@@ -21,6 +22,11 @@ const router = createBrowserRouter([
 			{
 				path: 'search',
 				element: <Search />,
+			},
+
+			{
+				path: 'analytics/episodes/:episodeId',
+				element: <AnalyticsEpisode />,
 			},
 		],
 	},
