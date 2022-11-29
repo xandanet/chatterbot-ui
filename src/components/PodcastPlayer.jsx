@@ -1,6 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
 import {Modal} from 'antd';
 import ReactPlayer from 'react-player';
+import humanizeDuration from 'humanize-duration';
 import {
 	IoPlaySkipBackCircleOutline,
 	IoPlaySkipForwardCircleOutline,
@@ -173,10 +174,15 @@ export default function PodcastPlayer(podcast) {
 
 			<Subtitles open={activePodcast?.has_subtitles && subtitlesOpen} />
 
-			<Modal title="Bookmark" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-				<p>Some contents...</p>
-				<p>Some contents...</p>
-				<p>Some contents...</p>
+			<Modal title="Bookmark" centered open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>
+				<p className="mb-4">
+					Time: <Duration seconds={duration * played} />
+				</p>
+				<p className="mb-4">
+					<textarea className="bg-slate-100 w-full py-2 px-3" placeholder="Add comment..." />
+				</p>
+
+				<Button>Add Bookmark</Button>
 			</Modal>
 		</>
 	);
