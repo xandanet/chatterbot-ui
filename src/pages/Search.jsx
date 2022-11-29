@@ -13,14 +13,12 @@ import {usePlayerContext} from '../context/usePlayerContext';
 
 export default function Search() {
 	const [searchTerm, setSearchTerm] = useState('');
-	// const [podcastData, podcastQuery] = usePodcasts();
-	// console.log('podcastData', podcastData);
 
+	usePodcasts();
 	const [searchData, searchQuery] = useSearch({
 		searchTerm,
 	});
 	const searchResults = searchData?.SegmentDTO || [];
-	console.log('searchQuery', searchQuery);
 
 	const filteredPodcasts = podcasts.filter((podcast) => {
 		const title = podcast.title.toLowerCase();

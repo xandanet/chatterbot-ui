@@ -1,54 +1,65 @@
 import _ from 'lodash';
+import {useQueryClient} from 'react-query';
+
 import {MdSentimentNeutral, MdSentimentVerySatisfied, MdSentimentVeryDissatisfied} from 'react-icons/md';
 import {IoPlayCircleOutline} from 'react-icons/io5';
 import {usePlayerContext} from '../context/usePlayerContext';
 import Button from './Button';
 
+import humanizeDuration from 'humanize-duration';
+
 export default function SearchResultItem({searchTerm, ...result}) {
-	const {playerRef, playerOptions, setPlayerOptions} = usePlayerContext();
+	const {playerRef, playerOptions, setPlayerOptions, setActivePodcast} = usePlayerContext();
+
+	const queryClient = useQueryClient();
+	const allPodcasts = queryClient.getQueryData('podcasts')?.data || [];
+	const podcast = allPodcasts.find((podcast) => podcast.id === result.PodcastID);
+
+	const startInSecs = humanizeDuration(result.Start, {units: ['s']}).replace(' seconds', '');
 
 	return (
-		<div key={result.ID} className="flex items-center p-8 text-left">
+		<div key={result.ID} className="flex items-center m-4 p-8 text-left bg-slate-50 rounded">
 			<div className="">
 				<span className="text-sm font-medium">
-					Season {result?.season || '00'} Episode {result?.episode || '000'}
+					Season {podcast?.season || '00'} Episode {podcast?.episode || '000'}
 				</span>
 
-				<h2 className="text-xl font-medium text-indigo-500 flex cursor-pointer">
-					<IoPlayCircleOutline className="text-3xl text-indigo-500 hover:text-indigo-600 mr-1" />{' '}
-					{result?.title || 'Podcast title'}
-				</h2>
+				<h2 className="text-xl font-medium text-indigo-500 flex">{result?.Podcast || 'Podcast title'}</h2>
 
 				<div className="flex mt-1 items-center">
-					<span className="text-xs text-slate-500">Plays: 100 | 03:15 - 06:33</span>{' '}
+					<span className="text-xs text-slate-500">
+						{humanizeDuration(result?.Start, {round: true})} &mdash; {humanizeDuration(result?.End, {round: true})}
+					</span>
 					<span className="ml-2 text-lg">
-						{
-							_.shuffle([
-								<MdSentimentNeutral className="text-yellow-500" />,
-								<MdSentimentVerySatisfied className="text-green-500" />,
-								<MdSentimentVeryDissatisfied className="text-red-500" />,
-							])[0]
-						}
+						{result.Sentiment === 'Positive' ? (
+							<MdSentimentVerySatisfied className="text-green-500" />
+						) : result.Sentiment === 'Negative' ? (
+							<MdSentimentVeryDissatisfied className="text-red-500" />
+						) : (
+							<MdSentimentNeutral className="text-yellow-500" />
+						)}
 					</span>
 				</div>
 
-				<div className="text-xs mt-1">
+				<div className="text-xs mt-1 mb-4">
 					<p dangerouslySetInnerHTML={{__html: result.Content.replace(searchTerm, `<mark>${searchTerm}</mark>`)}} />
 				</div>
 
 				<Button
-					onClick={() => {
-						console.log('Audio 1');
-						// setActivePodcast(podcast);
-						// setPlayerOptions((prev) => ({
-						// 	...prev,
-						// 	url: `/podcasts/${podcast.filename.replace('.wav', '.mp3')}`,
-						// 	playing: true,
-						// 	played: 0,
-						// 	loaded: 0,
-						// 	pip: false,
-						// }));
-						playerRef.current.seekTo(parseFloat(result.Start / 1000));
+					onClick={async () => {
+						console.log('startInSecs', startInSecs);
+						setActivePodcast(podcast);
+						setPlayerOptions((prev) => ({
+							...prev,
+							url: `/podcasts/${podcast.filename.replace('.wav', '.mp3')}`,
+							playing: true,
+							played: 0,
+							loaded: 0,
+							pip: false,
+						}));
+						setTimeout(() => {
+							playerRef.current.seekTo(parseFloat(startInSecs), 'seconds');
+						}, 1000);
 					}}>
 					Listen
 				</Button>
