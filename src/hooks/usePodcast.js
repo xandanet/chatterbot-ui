@@ -1,18 +1,18 @@
 import {useQuery} from 'react-query';
 
-const fetchInteventions = async ({queryKey}) => {
+const fetchEpisode = async ({queryKey}) => {
     const { episodeId } = queryKey?.[1];
-    const response = await fetch('https://api.chatterbot.hostings.co.uk/v1/podcasts/interventions?id=' + episodeId || '')
+    const response = await fetch('https://api.chatterbot.hostings.co.uk/v1/podcasts/' + episodeId || '')
     if (!response.ok) {
         throw new Error('Network response was not ok')
     }
     return response.json()
 }
 
-export default function useInterventions({episodeId}) {
+export default function usePodcast({episodeId}) {
     const query = useQuery(
-        ['interventions', {episodeId}],
-        fetchInteventions,
+        ['podcast', {episodeId}],
+        fetchEpisode,
         {
             enabled: !!episodeId
         }
