@@ -1,4 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
+import {Modal} from 'antd';
 import ReactPlayer from 'react-player';
 import {
 	IoPlaySkipBackCircleOutline,
@@ -22,7 +23,16 @@ export default function PodcastPlayer(podcast) {
 	const {playing, duration, played} = playerOptions;
 	const {loading, canPlay, subtitlesOpen} = podcastOptions;
 
-	console.log('activePodcast', activePodcast);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const showModal = () => {
+		setIsModalOpen(true);
+	};
+	const handleOk = () => {
+		setIsModalOpen(false);
+	};
+	const handleCancel = () => {
+		setIsModalOpen(false);
+	};
 
 	const handlePlayPause = () => {
 		setPlayerOptions((prev) => ({...prev, playing: !playerOptions.playing}));
@@ -79,7 +89,7 @@ export default function PodcastPlayer(podcast) {
 
 	return (
 		<>
-			<div className="absolute w-0 h-0 overflow-hidden">
+			<div className={`absolute w-0 h-0 overflow-hidden`}>
 				<ReactPlayer
 					ref={playerRef}
 					{...playerOptions}
@@ -135,7 +145,7 @@ export default function PodcastPlayer(podcast) {
 						<Duration seconds={duration * played} /> / <Duration seconds={duration} />
 					</div>
 					<div>
-						<IconButton disabled={!canPlay} onClick={() => alert('Bookmark!')}>
+						<IconButton disabled={!canPlay} onClick={showModal}>
 							<IoBookmarkSharp className="text-2xl" />
 						</IconButton>
 					</div>
@@ -162,6 +172,12 @@ export default function PodcastPlayer(podcast) {
 			</div>
 
 			<Subtitles open={activePodcast?.has_subtitles && subtitlesOpen} />
+
+			<Modal title="Bookmark" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+				<p>Some contents...</p>
+				<p>Some contents...</p>
+				<p>Some contents...</p>
+			</Modal>
 		</>
 	);
 }

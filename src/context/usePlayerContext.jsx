@@ -1,5 +1,6 @@
 import React, {createContext, useContext, useEffect, useMemo, useRef, useState} from 'react';
 import {podcasts} from '../data/podcasts';
+import useSubtitles from '../hooks/useSubtitles';
 
 const PlayerContext = createContext({});
 
@@ -34,8 +35,6 @@ function PlayerContextProvider({children}) {
 		showSubtitles: false,
 	});
 	const [activePodcast, setActivePodcast] = useState({});
-
-	console.log('playerOptions', playerOptions);
 
 	return (
 		<PlayerContext.Provider
