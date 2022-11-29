@@ -6,7 +6,9 @@ import PlayerContextProvider from './context/usePlayerContext';
 import Layout from './pages/Layout';
 import Home from './pages/Home';
 import Search from './pages/Search';
+import AnalyticsEpisodes from './pages/Analytics/Episodes'
 import AnalyticsEpisode from './pages/Analytics/Episode'
+import AnalyticsSearch from './pages/Analytics/Search'
 
 import './App.scss';
 
@@ -26,8 +28,16 @@ const router = createBrowserRouter([
 			},
 
 			{
+				path: 'analytics/episodes',
+				element: <AnalyticsEpisodes />,
+			},
+			{
 				path: 'analytics/episodes/:episodeId',
 				element: <AnalyticsEpisode />,
+			},
+			{
+				path: 'analytics/search',
+				element: <AnalyticsSearch />,
 			},
 		],
 	},
