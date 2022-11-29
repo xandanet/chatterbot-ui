@@ -8,6 +8,7 @@ export default function Subtitles({children, open, ...props}) {
 			<div className="pb-12 pt-6">
 				<h2 className="text-2xl font-medium mb-4">Subtitles</h2>
 
+				<span className="text-xs uppercase text-slate-500">SPEAKER 00</span>
 				<p>No subtitles found for this podcast.</p>
 			</div>
 		</div>

@@ -6,13 +6,18 @@
 
 input[type="range"] {
   -webkit-appearance: none;
-  height: 5px;
   width: 100%;
-  margin-bottom: 10px;
+  height: 5px;
   border-radius: 8px;
   background: #3b7677;
-  transition: background 0.2s ease;
+  transition: background-color 0.2s ease;
   cursor: pointer;
+
+  &::-webkit-slider-runnable-track {
+    -webkit-appearance: none; /* Override default look */
+   appearance: none;
+   margin-top: -5px; /* Centers thumb on the track */
+  }
 }
 
 button {

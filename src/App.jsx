@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {createBrowserRouter, RouterProvider, Route} from 'react-router-dom';
 import {QueryClient, QueryClientProvider} from 'react-query';
 
+import PlayerContextProvider from './context/usePlayerContext';
 import Layout from './pages/Layout';
 import Home from './pages/Home';
 import Search from './pages/Search';
@@ -40,7 +41,9 @@ function App() {
 	return (
 		<React.StrictMode>
 			<QueryClientProvider client={queryClient}>
-				<RouterProvider router={router} />
+				<PlayerContextProvider>
+					<RouterProvider router={router} />
+				</PlayerContextProvider>
 			</QueryClientProvider>
 		</React.StrictMode>
 	);

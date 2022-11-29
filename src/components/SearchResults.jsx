@@ -11,7 +11,7 @@ export default function SearchResults({children, totalCount, loading}) {
 
 	return (
 		<div>
-			<div className="text-right text-sm px-4 py-3">Showing {totalCount || 0} Results</div>
+			{typeof totalCount === 'number' && <div className="text-right text-sm px-4 py-3">Showing {totalCount} Results</div>}
 			<div className="grid grid-cols-1 divide-y bg-slate-50">{children}</div>
 		</div>
 	);

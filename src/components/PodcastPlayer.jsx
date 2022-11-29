@@ -15,47 +15,14 @@ import {podcasts} from '../data/podcasts';
 import Duration from './player/Duration';
 import IconButton from './player/IconButton';
 import Subtitles from './player/Subtitles';
+import {usePlayerContext} from '../context/usePlayerContext';
 
 export default function PodcastPlayer(podcast) {
-	const [playerOptions, setPlayerOptions] = useState({
-		loading: false,
-		canPlay: false,
-		url: [podcasts[0].audioSrc],
-		pip: false,
-		playing: false,
-		controls: false,
-		light: false,
-		volume: 0.8,
-		muted: false,
-		played: 0,
-		loaded: 0,
-		duration: 0,
-		playbackRate: 1.0,
-		loop: false,
-		file: {
-			forceAudio: true,
-		},
-	});
-	const [audioOptions, setAudioOptions] = useState({
-		loading: false,
-		canPlay: false,
-		subtitlesOpen: false,
-	});
-	const playerRef = useRef();
+	const {playerRef, podcastOptions, setPodcastOptions, playerOptions, setPlayerOptions, activePodcast} = usePlayerContext();
 	const {playing, duration, played} = playerOptions;
-	const {loading, canPlay, subtitlesOpen} = audioOptions;
+	const {loading, canPlay, subtitlesOpen} = podcastOptions;
 
-	const load = (url) => {
-		console.log('url', url);
-		console.log('canPlay', ReactPlayer.canPlay(url));
-		setPlayerOptions((prev) => ({
-			...prev,
-			url,
-			played: 0,
-			loaded: 0,
-			pip: false,
-		}));
-	};
+	console.log('activePodcast', activePodcast);
 
 	const handlePlayPause = () => {
 		setPlayerOptions((prev) => ({...prev, playing: !playerOptions.playing}));
@@ -98,7 +65,7 @@ export default function PodcastPlayer(podcast) {
 
 	const handleEnded = () => {
 		console.log('onEnded');
-		setPlayerOptions((prev) => ({...prev, playing: playerOptions.loop}));
+		setPlayerOptions((prev) => ({...prev, playing: false}));
 	};
 
 	const handleDuration = (duration) => {
@@ -107,7 +74,7 @@ export default function PodcastPlayer(podcast) {
 	};
 
 	const toggleSubtitles = () => {
-		setAudioOptions((prev) => ({...prev, subtitlesOpen: !audioOptions.subtitlesOpen}));
+		setPodcastOptions((prev) => ({...prev, subtitlesOpen: !podcastOptions.subtitlesOpen}));
 	};
 
 	return (
@@ -118,7 +85,7 @@ export default function PodcastPlayer(podcast) {
 					{...playerOptions}
 					onReady={() => {
 						console.log('onReady');
-						setAudioOptions((prev) => ({
+						setPodcastOptions((prev) => ({
 							...prev,
 							canPlay: true,
 						}));
@@ -128,14 +95,14 @@ export default function PodcastPlayer(podcast) {
 					onPause={handlePause}
 					onBuffer={() => {
 						console.log('onBuffer');
-						setAudioOptions((prev) => ({
+						setPodcastOptions((prev) => ({
 							...prev,
 							loading: true,
 						}));
 					}}
 					onBufferEnd={() => {
 						console.log('onBufferEnd');
-						setAudioOptions((prev) => ({
+						setPodcastOptions((prev) => ({
 							...prev,
 							loading: false,
 						}));
@@ -144,7 +111,7 @@ export default function PodcastPlayer(podcast) {
 					onEnded={handleEnded}
 					onError={(e) => {
 						console.log('onError', e);
-						setAudioOptions((prev) => ({
+						setPodcastOptions((prev) => ({
 							...prev,
 							canPlay: false,
 						}));
@@ -154,17 +121,31 @@ export default function PodcastPlayer(podcast) {
 				/>
 			</div>
 
-			{JSON.stringify(playerOptions, null, 4)}
-			<br />
-
-			<div className="fixed bottom-4 left-4 right-4 flex items-center bg-slate-200 shadow-xl rounded p-2 z-20">
-				<div className="mr-4">
-					<IconButton large disabled={!canPlay} onClick={() => handlePlayPause()}>
-						{!playing ? <IoPlayCircleOutline className="text-4xl" /> : <IoPauseCircleOutline className="text-4xl" />}
-					</IconButton>
+			<div className="fixed bottom-4 left-4 right-4 bg-slate-200 shadow-xl rounded z-20">
+				<div className="flex items-center p-2">
+					<div className="mr-2">
+						<IconButton large disabled={!canPlay} onClick={() => handlePlayPause()}>
+							{!playing ? <IoPlayCircleOutline className="text-4xl" /> : <IoPauseCircleOutline className="text-4xl" />}
+						</IconButton>
+					</div>
+					<div className="mr-4 flex-1 text-left">
+						{loading ? 'Loading...' : <span>{activePodcast ? activePodcast.title : 'No podcast selected.'}</span>}
+					</div>
+					<div className="ml-auto mr-2 text-xs">
+						<Duration seconds={duration * played} /> / <Duration seconds={duration} />
+					</div>
+					<div>
+						<IconButton disabled={!canPlay} onClick={() => alert('Bookmark!')}>
+							<IoBookmarkSharp className="text-2xl" />
+						</IconButton>
+					</div>
+					<div>
+						<IconButton disabled={!activePodcast?.has_subtitles} onClick={toggleSubtitles}>
+							<MdOutlineTextsms className="text-2xl" />
+						</IconButton>
+					</div>
 				</div>
-				<div className="mr-4">{loading ? 'Loading...' : <span>No podcast selected.</span>}</div>
-				<div className="w-[300px] ml-auto mr-4">
+				<div className="-mt-4">
 					<input
 						type="range"
 						min={0}
@@ -175,38 +156,12 @@ export default function PodcastPlayer(podcast) {
 						onChange={handleSeekChange}
 						onMouseUp={handleSeekMouseUp}
 						disabled={!canPlay}
+						className="m-0"
 					/>
 				</div>
-				<div className="mr-2">
-					<Duration seconds={duration * played} /> / <Duration seconds={duration} />
-				</div>
-				<div>
-					<IconButton disabled={!canPlay} onClick={() => alert('Bookmark!')}>
-						<IoBookmarkSharp className="text-2xl" />
-					</IconButton>
-				</div>
-				<div>
-					<IconButton disabled={!canPlay} onClick={toggleSubtitles}>
-						<MdOutlineTextsms className="text-2xl" />
-					</IconButton>
-				</div>
 			</div>
-			<Subtitles open={subtitlesOpen} />
-			<Button
-				onClick={() => {
-					load(podcasts[0].audioSrc);
-					handlePlay();
-				}}>
-				Load MP3
-			</Button>
-			<Button
-				onClick={() => {
-					load(podcasts[0].audioSrc);
-					const seekValue = 13;
-					playerRef.current.seekTo(parseFloat(seekValue, 'seconds'));
-				}}>
-				Seek to timestamp
-			</Button>
+
+			<Subtitles open={activePodcast?.has_subtitles && subtitlesOpen} />
 		</>
 	);
 }
