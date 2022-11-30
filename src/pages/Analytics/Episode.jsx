@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {useParams} from 'react-router-dom'
-import {BarChart, PieChart, LineChart, Line, Pie, Tooltip, CartesianGrid, XAxis, YAxis, Legend, Bar} from 'recharts';
+import {BarChart, PieChart, LineChart, Line, Pie, Tooltip, CartesianGrid, XAxis, YAxis, Cell, Bar, Legend} from 'recharts';
 import {Col, Row} from 'antd';
 import moment from 'moment';
 
@@ -31,7 +31,7 @@ export default function Episode() {
       plays.forEach((element, index) => {
         data.push({
           name: moment(element.date).format('dddd'),
-          value: element.count
+          Plays: element.count
         })
       });
     }
@@ -45,7 +45,7 @@ export default function Episode() {
       popularities.forEach((element, index) => {
         data.push({
           name: "",
-          value: element.plays
+          Plays: element.plays
         })
       });
     }
@@ -58,7 +58,7 @@ export default function Episode() {
     if (interventions) {
       interventions.forEach((element, index) => {
         data.push({
-          name: `Speaker ${index + 1}`,
+          name: `Speaker ${index} - ${humanizer({delimiter: " and ", round: true})(element.time_spoken)}`,
           value: element.time_spoken
         })
       });
@@ -96,6 +96,8 @@ export default function Episode() {
     );
   };
 
+  const chartColours = ['#C6A49A', '#98c491', '#f47f12', '#f4ad23', '#E94E77', '#ffc22f', '#009384', '#e0e0cf', '#77934d', '#bfcda7', '#eb8b36', '#fdeca2'];
+
   return (
     <div className="centering">
       {podcast?.title &&
@@ -103,7 +105,7 @@ export default function Episode() {
       }
       <Row style={{marginBottom: 50}}>
         <Col>
-          <h2 className="text-xl mb-4">Total Plays</h2>
+          <h2 className="text-xl mb-4">Daily Episode Plays</h2>
           <LineChart
             width={750}
             height={500}
@@ -119,29 +121,35 @@ export default function Episode() {
             <XAxis dataKey="name" label=""/>
             <YAxis label={{ value: 'Plays', offset: 0, angle: -90, position: 'insideLeft' }} />
             <Tooltip/>
-            <Line dataKey="value" fill="#8884d8"/>
+            <Line dataKey="Plays" fill="#8884d8"/>
           </LineChart>
         </Col>
       </Row>
 
-      <Row style={{marginBottom: 50}}>
+      <Row style={{marginBottom: 50}} gutter={100}>
         <Col>
-          <h2 className="text-xl">Speaker Durations</h2>
-          <PieChart width={500} height={500}>
+          <h2 className="text-xl">Speaker Duration</h2>
+          <p className="text-slate-600 mb-4">Total amount of time spoken by each speaker</p>
+          <PieChart width={800} height={500}>
             <Pie
               dataKey="value"
               isAnimationActive={false}
               data={getInterventionsDurationData()}
-              // outerRadius={250}
               fill="#8884d8"
               labelLine={false}
-              label={getInterventionsDurationLabels}
-            />
+              label=""
+            >
+              {getInterventionsDurationData().map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={chartColours[index % chartColours.length]} />
+              ))}
+            </Pie>
+            <Legend verticalAlign="top" align="left" layout="vertical"/>
             <Tooltip/>
           </PieChart>
         </Col>
         <Col>
           <h2 className="text-xl mb-4">Speaker Popularity</h2>
+          <p className="text-slate-600 mb-4">Total number of listens to each speaker's segments</p>
           <BarChart
             width={750}
             height={500}
@@ -157,7 +165,11 @@ export default function Episode() {
             <XAxis dataKey="name" label=""/>
             <YAxis label={{ value: 'Plays', offset: 0, angle: -90, position: 'insideLeft' }} />
             <Tooltip/>
-            <Bar dataKey="value" fill="#8884d8"/>
+            <Bar dataKey="value" fill="#8884d8" >
+              {getSpeakerPopularityData().map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={chartColours[index % chartColours.length]} />
+              ))}
+            </Bar>
           </BarChart>
         </Col>
       </Row>
@@ -165,6 +177,7 @@ export default function Episode() {
       <Row style={{marginBottom: 50}}>
         <Col>
           <h2 className="text-xl mb-4">Segment Popularity</h2>
+          <p className="text-slate-600 mb-4">Total number of plays for each segment of the episode</p>
           <BarChart
             width={750}
             height={500}
@@ -180,7 +193,7 @@ export default function Episode() {
             <XAxis dataKey="name" label=""/>
             <YAxis label={{ value: 'Plays', offset: 0, angle: -90, position: 'insideLeft' }} />
             <Tooltip/>
-            <Bar dataKey="value" fill="#8884d8"/>
+            <Bar dataKey="Plays" fill="#8884d8"/>
           </BarChart>
         </Col>
       </Row>
