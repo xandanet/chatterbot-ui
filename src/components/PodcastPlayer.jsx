@@ -17,6 +17,7 @@ import Duration from './player/Duration';
 import IconButton from './player/IconButton';
 import Subtitles from './player/Subtitles';
 import BookmarkModal from './player/BookmarkModal';
+import BookmarksTimeline from './player/BookmarkTimeline';
 
 export default function PodcastPlayer(podcast) {
 	const {playerRef, podcastOptions, setPodcastOptions, playerOptions, setPlayerOptions, activePodcast} = usePlayerContext();
@@ -174,7 +175,7 @@ export default function PodcastPlayer(podcast) {
 			</div>
 
 			<Subtitles open={activePodcast?.has_subtitles && subtitlesOpen} />
-
+			<BookmarksTimeline />
 			<BookmarkModal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} time={duration * played} />
 		</>
 	);
