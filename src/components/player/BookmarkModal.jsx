@@ -34,8 +34,8 @@ export default function BookmarkModal({time, ...props}) {
 				onClick={() => {
 					createBookmark(
 						{
-							id: activePodcast?.id,
-							time: Math.round(time * 1000),
+							pod_id: activePodcast?.id,
+							position: Math.round(time * 1000),
 							note,
 						},
 						{
