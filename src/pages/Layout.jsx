@@ -7,7 +7,7 @@ import PodcastPlayer from '../components/PodcastPlayer';
 
 import {podcasts} from '../data/podcasts';
 
-export default function Layout() {
+export default function Layout({showPlayer}) {
 	return (
 		<div className="App">
 			<Header />
@@ -15,7 +15,7 @@ export default function Layout() {
 				<Outlet />
 			</div>
 			<Footer />
-			<PodcastPlayer />
+			{showPlayer && <PodcastPlayer />}
 		</div>
 	);
 }
