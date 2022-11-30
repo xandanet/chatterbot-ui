@@ -17,12 +17,12 @@ export default function Episodes() {
 
   return (
     <div>
-      <h1 className="my-8">Episodes</h1>
+      <h1 className="my-8">Episode Analytics</h1>
 
       <SearchResults>
         {podcasts?.map((podcast) => {
             return (
-              <div key={podcast.id} className="p-8 text-left">
+              <div key={podcast.id} className="mx-8 my-4 p-6 text-left bg-slate-50 rounded shadow">
                 <div className="text-xs uppercase font-bold text-slate-500">
                   Season {podcast.season} Episode {podcast.episode}
                 </div>

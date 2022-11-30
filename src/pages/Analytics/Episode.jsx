@@ -97,9 +97,9 @@ export default function Episode() {
   };
 
   return (
-    <div>
+    <div className="centering">
       {podcast?.title &&
-        <h1 className="my-8">Analytics: {podcast.title}</h1>
+        <h1 className="my-8">Episode Analytics: {podcast.title}</h1>
       }
       <Row style={{marginBottom: 50}}>
         <Col>

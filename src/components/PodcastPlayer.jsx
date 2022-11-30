@@ -1,5 +1,4 @@
 import {useEffect, useRef, useState} from 'react';
-import {Modal} from 'antd';
 import ReactPlayer from 'react-player';
 import humanizeDuration from 'humanize-duration';
 import {
@@ -9,15 +8,15 @@ import {
 	IoPlayCircleOutline,
 	IoBookmarkSharp,
 } from 'react-icons/io5';
-
-import {MdOutlineTextsms} from 'react-icons/md';
+import {MdBookmarkBorder, MdOutlineTextsms} from 'react-icons/md';
+import {usePlayerContext} from '../context/usePlayerContext';
 
 import Button from './Button';
 import {podcasts} from '../data/podcasts';
 import Duration from './player/Duration';
 import IconButton from './player/IconButton';
 import Subtitles from './player/Subtitles';
-import {usePlayerContext} from '../context/usePlayerContext';
+import BookmarkModal from './player/BookmarkModal';
 
 export default function PodcastPlayer(podcast) {
 	const {playerRef, podcastOptions, setPodcastOptions, playerOptions, setPlayerOptions, activePodcast} = usePlayerContext();
@@ -27,10 +26,12 @@ export default function PodcastPlayer(podcast) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const showModal = () => {
 		setIsModalOpen(true);
+		handlePause();
 	};
 	const handleOk = () => {
 		setIsModalOpen(false);
 	};
+
 	const handleCancel = () => {
 		setIsModalOpen(false);
 	};
@@ -147,7 +148,7 @@ export default function PodcastPlayer(podcast) {
 					</div>
 					<div>
 						<IconButton disabled={!canPlay} onClick={showModal}>
-							<IoBookmarkSharp className="text-2xl" />
+							<MdBookmarkBorder className="text-2xl" />
 						</IconButton>
 					</div>
 					<div>
@@ -174,16 +175,7 @@ export default function PodcastPlayer(podcast) {
 
 			<Subtitles open={activePodcast?.has_subtitles && subtitlesOpen} />
 
-			<Modal title="Bookmark" centered open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>
-				<p className="mb-4">
-					Time: <Duration seconds={duration * played} />
-				</p>
-				<p className="mb-4">
-					<textarea className="bg-slate-100 w-full py-2 px-3" placeholder="Add comment..." />
-				</p>
-
-				<Button>Add Bookmark</Button>
-			</Modal>
+			<BookmarkModal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} time={duration * played} />
 		</>
 	);
 }

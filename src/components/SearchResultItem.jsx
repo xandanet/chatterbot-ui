@@ -18,7 +18,7 @@ export default function SearchResultItem({searchTerm, ...result}) {
 	const startInSecs = humanizeDuration(result.Start, {units: ['s']}).replace(' seconds', '');
 
 	return (
-		<div key={result.ID} className="flex items-center m-4 p-8 text-left bg-slate-50 rounded">
+		<div key={result.ID} className="flex items-center p-8 text-left bg-slate-50 rounded">
 			<div className="">
 				<span className="text-sm font-medium">
 					Season {podcast?.season || '00'} Episode {podcast?.episode || '000'}
@@ -47,7 +47,6 @@ export default function SearchResultItem({searchTerm, ...result}) {
 
 				<Button
 					onClick={async () => {
-						console.log('startInSecs', startInSecs);
 						setActivePodcast(podcast);
 						setPlayerOptions((prev) => ({
 							...prev,

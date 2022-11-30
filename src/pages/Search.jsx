@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import _ from 'lodash';
 
 import Header from '../components/Header';
 import Button from '../components/Button';
@@ -20,15 +21,15 @@ export default function Search() {
 	});
 	const searchResults = searchData?.SegmentDTO || [];
 
-	const filteredPodcasts = podcasts.filter((podcast) => {
-		const title = podcast.title.toLowerCase();
-		return title.includes(searchTerm.toLowerCase());
-	});
-
 	return (
 		<div>
 			<h1 className="my-8">Search</h1>
-			<TextInput onChange={(e) => setSearchTerm(e.target.value)} loading={searchQuery.isLoading} />
+			<TextInput
+				onChange={_.debounce(function (e) {
+					setSearchTerm(e.target.value);
+				}, 500)}
+				loading={searchQuery.isLoading}
+			/>
 			{/* <Button>Search</Button> */}
 			{searchTerm && searchResults && (
 				<SearchResults loading={searchQuery.isLoading} totalCount={searchResults.length || 0}>
@@ -38,12 +39,16 @@ export default function Search() {
 						))}
 						{!searchResults.length && (
 							<div className="flex items-center p-8 justify-center">
-								<span>Nothing found for your keywords</span>
+								<span>
+									Oops! Nothing found for your keywords, maybe this is something we can talk about in our next podcast!
+								</span>
 							</div>
 						)}
 					</div>
 				</SearchResults>
 			)}
+
+			{!searchTerm && <p className="my-12">Enter a keyword above to start searching through our podcasts!</p>}
 		</div>
 	);
 }

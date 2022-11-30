@@ -41,7 +41,6 @@ export default function Subtitles({children, open, ...props}) {
 
 	const playedSeconds = Math.round(playerOptions.playedSeconds * 1000);
 	const currentSubtitles = subtitlesList?.find((subtitle) => playedSeconds >= subtitle.Start && playedSeconds <= subtitle.End);
-	console.log('currentSubtitles', currentSubtitles);
 	const [languageOpen, setLanguageOpen] = useState(false);
 
 	const hide = () => {

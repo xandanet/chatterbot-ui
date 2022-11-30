@@ -10,7 +10,6 @@ const fetchSubtitles = async ({queryKey}) => {
 }
 
 export default function useSubtitles({podcastId}) {
-    console.log('podcastId', podcastId)
     const query = useQuery(
         ['subtitles', {podcastId}], 
         fetchSubtitles, 

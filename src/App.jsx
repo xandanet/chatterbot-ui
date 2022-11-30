@@ -1,14 +1,16 @@
 import React, {useState} from 'react';
 import {createBrowserRouter, RouterProvider, Route} from 'react-router-dom';
 import {QueryClient, QueryClientProvider} from 'react-query';
-
 import PlayerContextProvider from './context/usePlayerContext';
+
 import Layout from './pages/Layout';
 import Home from './pages/Home';
 import Search from './pages/Search';
-import AnalyticsEpisodes from './pages/Analytics/Episodes'
-import AnalyticsEpisode from './pages/Analytics/Episode'
-import AnalyticsSearch from './pages/Analytics/Search'
+
+import AdminLayout from './pages/AdminLayout';
+import AnalyticsEpisodes from './pages/Analytics/Episodes';
+import AnalyticsEpisode from './pages/Analytics/Episode';
+import AnalyticsSearch from './pages/Analytics/Search';
 
 import './App.scss';
 
@@ -26,17 +28,22 @@ const router = createBrowserRouter([
 				path: 'search',
 				element: <Search />,
 			},
-
+		],
+	},
+	{
+		path: '/analytics',
+		element: <AdminLayout />,
+		children: [
 			{
-				path: 'analytics/episodes',
+				path: 'episodes',
 				element: <AnalyticsEpisodes />,
 			},
 			{
-				path: 'analytics/episodes/:episodeId',
+				path: 'episodes/:episodeId',
 				element: <AnalyticsEpisode />,
 			},
 			{
-				path: 'analytics/search',
+				path: 'search',
 				element: <AnalyticsSearch />,
 			},
 		],
